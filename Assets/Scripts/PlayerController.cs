@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TMPro;
@@ -18,6 +17,8 @@ public class PlayerController : MonoBehaviour
     private float movementY;
     public GameObject winTextObject;
 
+    // public float gravityScale = 5;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,13 +31,14 @@ public class PlayerController : MonoBehaviour
         winTextObject.SetActive(false);
     }
 
- // FixedUpdate is called once per fixed frame-rate frame.
+    // FixedUpdate is called once per fixed frame-rate frame.
     private void FixedUpdate()
     {
          // Create a 3D movement vector using the X and Y inputs.
         Vector3 movement = new Vector3 (movementX, 0.0f, movementY);
          // Apply force to the Rigidbody to move the player.
         rb.AddForce(movement * speed);
+        // rb.AddForce(Physics.gravity * (gravityScale - 1) * rb.mass);
     }
 
     void OnTriggerEnter (Collider other)
@@ -76,3 +78,25 @@ public class PlayerController : MonoBehaviour
         }
     }
 }
+    // void IsGrounded()
+    // {
+    //     canJump = Physics3D.BoxCast(boxCol3D.bounds.center, boxCol3D.bounds.size, 0f, Vector2.down, 0.1f, groundLayer);
+    // }
+
+    // void HandleJumping()
+    // {
+    //     if (Input.GetBUttonDown(TagManager.JUMP_BUTTON))
+    //     {
+    //         if (canJump)
+    //         {
+    //             doubleJump = true;
+    //             myBody.velocity = new Vector2(myBody.velocity.x, jumpForce);
+    //         }
+    //         else if (doubleJump)
+    //         {
+    //             doubleJump = flase;
+    //             myBody.velocity = new Vector2(myBody.velocity.x, jumpForce);
+    //         }
+    //     }
+    // }
+
