@@ -16,8 +16,9 @@ public class PlayerController : MonoBehaviour
     private float movementX;
     private float movementY;
     public GameObject winTextObject;
-
-    // public float gravityScale = 5;
+    public float jumpAmount = 80;
+    public float gravityScale = 10;
+    public float fallingGravityScale = 40;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +32,25 @@ public class PlayerController : MonoBehaviour
         winTextObject.SetActive(false);
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            rb.AddForce(Vector3.up * jumpAmount, ForceMode.Impulse);
+        }
+
+        
+        // if(rb.velocity.y >= 0)
+        // {
+        //     rb.gravityScale = gravityScale;
+        // }
+        // else if (rb.velocity.y < 0)
+        // {
+        //     rb.gravityScale = fallingGravityScale;
+        // }
+        
+    }
+
     // FixedUpdate is called once per fixed frame-rate frame.
     private void FixedUpdate()
     {
@@ -38,7 +58,8 @@ public class PlayerController : MonoBehaviour
         Vector3 movement = new Vector3 (movementX, 0.0f, movementY);
          // Apply force to the Rigidbody to move the player.
         rb.AddForce(movement * speed);
-        // rb.AddForce(Physics.gravity * (gravityScale - 1) * rb.mass);
+        rb.AddForce(Physics.gravity * (gravityScale - 1) * rb.mass);
+        
     }
 
     void OnTriggerEnter (Collider other)
@@ -52,6 +73,14 @@ public class PlayerController : MonoBehaviour
             count = count + 1;
              // Update the count display.
             SetCountText();
+
+            
+            float speed = 100f;
+            // makes ball jump when touching pickup
+            Vector3 movement = new Vector3 (movementX, 0.0f, movementY);
+            // rb.AddForce(movement * 10000);
+            rb.AddForce(movement * speed);
+            transform.position += Vector3.forward * (speed * Time.deltaTime);
         }
     }
 
