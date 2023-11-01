@@ -18,7 +18,12 @@ public class PlayerController : MonoBehaviour
     public GameObject winTextObject;
     public float jumpAmount = 80;
     public float gravityScale = 10;
-    public float fallingGravityScale = 40;
+    // public float fallingGravityScale = 40;
+
+    //boosting:
+    private float boostTimer;
+    private bool boosting;
+
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +35,9 @@ public class PlayerController : MonoBehaviour
         SetCountText();
          // Initially set the win text to be inactive.
         winTextObject.SetActive(false);
+        
+        //boosting
+        
     }
 
     void Update()
@@ -39,6 +47,18 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(Vector3.up * jumpAmount, ForceMode.Impulse);
         }
 
+        //boosting
+        if(boosting)
+        {
+            boostTimer += Time.deltaTime;
+            if(boostTimer >= 0.5)
+            {
+                speed = 5;
+                boostTimer = 0;
+                boosting = false;
+                Debug.Log("back to slow");
+            }
+        }
         
         // if(rb.velocity.y >= 0)
         // {
@@ -67,20 +87,27 @@ public class PlayerController : MonoBehaviour
          // Check if the object the player collided with has the "PickUp" tag.
         if (other.gameObject.CompareTag("PickUp"))
         {
+            //boosting
+            Debug.Log("booooost on collision");
+            boosting = true;
+            speed = 20;
+
+            Destroy(other.gameObject);
+
              // Deactivate the collided object (making it disappear).
-            other.gameObject.SetActive(false);
+            // other.gameObject.SetActive(false);~`~~~~~~~~~~~~~~~~~~
              // Increment the count of "PickUp" objects collected.
             count = count + 1;
              // Update the count display.
             SetCountText();
 
             
-            float speed = 100f;
-            // makes ball jump when touching pickup
-            Vector3 movement = new Vector3 (movementX, 0.0f, movementY);
-            // rb.AddForce(movement * 10000);
-            rb.AddForce(movement * speed);
-            transform.position += Vector3.forward * (speed * Time.deltaTime);
+            // float speed = 100f;
+            // // makes ball jump when touching pickup
+            // Vector3 movement = new Vector3 (movementX, 0.0f, movementY);
+            // // rb.AddForce(movement * 10000);
+            // rb.AddForce(movement * speed);
+            // transform.position += Vector3.forward * (speed * Time.deltaTime);
         }
     }
 
