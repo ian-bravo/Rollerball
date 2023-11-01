@@ -24,6 +24,9 @@ public class PlayerController : MonoBehaviour
     private float boostTimer;
     private bool boosting;
 
+    private float slowTimer;
+    private bool slowDown;
+
 
     // Start is called before the first frame update
     void Start()
@@ -47,16 +50,29 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(Vector3.up * jumpAmount, ForceMode.Impulse);
         }
 
+        if(slowDown)
+        {
+            slowTimer += Time.deltaTime;
+            if(slowTimer >= 2)
+            {
+                speed = 11;
+                slowTimer = 0;
+                slowDown = false;
+                Debug.Log("back to normal speed from slow");
+            }
+        }
+
+
         //boosting
         if(boosting)
         {
             boostTimer += Time.deltaTime;
             if(boostTimer >= 0.5)
             {
-                speed = 5;
+                speed = 12;
                 boostTimer = 0;
                 boosting = false;
-                Debug.Log("back to slow");
+                Debug.Log("back to normal speed from boost");
             }
         }
         
@@ -85,12 +101,28 @@ public class PlayerController : MonoBehaviour
     void OnTriggerEnter (Collider other)
     {   
          // Check if the object the player collided with has the "PickUp" tag.
+        if (other.gameObject.CompareTag("SlowField"))
+        {
+            Debug.Log("hit slow field");
+            slowDown = true;
+
+            speed = -10;
+            Vector3 movement = new Vector3 (movementX, 0.0f, movementY);
+            rb.AddForce(movement * speed * 0.1f);
+
+            
+            // other.gameObject.SetActive(false);
+            Destroy(other.gameObject);
+            Debug.Log("slow field destroyed");
+
+        }
+         
         if (other.gameObject.CompareTag("PickUp"))
         {
             //boosting
-            Debug.Log("booooost on collision");
+            Debug.Log("boost on collision");
             boosting = true;
-            speed = 20;
+            speed = 10000;
 
             Destroy(other.gameObject);
 
